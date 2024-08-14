@@ -2,7 +2,6 @@ import tkinter.filedialog
 import tkinter.messagebox
 from tkinter import *
 
-
 def abrir_arq():
     bloco.delete('0.0',END)
     tabela.delete(0,END)
@@ -143,16 +142,45 @@ janela.geometry("900x400")
 janela.config(background='#BA55D3')
 
 bloco = Text(janela, width=60, height=20)
-bloco.grid(column=0,row=0,padx=5,pady=5)
+bloco.grid(column=1,row=0,padx=0,pady=0)
 
-numeracao = Text(janela,)
+def atualiza_linha(event):
+    texto = bloco.get('0.0',END)
+    numeros_l.config(state='normal')
+    numeros_l.delete('0.0',END)
+    n = 2
+    numeros_l.insert(END,str(1))
+    for i in range(len(texto)-1):
+        if(texto[i] == "\n"):
+            numeros_l.insert(END, '\n'+ str(n))
+            n = n + 1
+    numeros_l.yview_moveto(bloco.yview()[0])
+    numeros_l.config(state='disabled')
+
+def atualiza_visao(event):
+    numeros_l.config(state='normal')
+    numeros_l.yview_moveto(bloco.yview()[0])
+    numeros_l.config(state='disabled')
+
+def atualiza_visao_(event):
+    bloco.yview_moveto(numeros_l.yview()[0])
+
+numeros_l = Text(janela,wrap='none', width=4, height=20,background='lightgrey',state='disabled')
+numeros_l.grid(column=0,row=0,padx=2,pady=0)
+numeros_l.config(state='normal')
+numeros_l.insert('1.0', '1')
+numeros_l.config(state='disabled')
+bloco.bind("<KeyRelease>", atualiza_linha)
+bloco.bind("<MouseWheel>", atualiza_visao)
+numeros_l.bind("<MouseWheel>", atualiza_visao_)
+
 
 tabela = Listbox(janela,height=20,width=60)
-tabela.grid(column=1,row=0,padx=5,pady=5)
+tabela.grid(column=2,row=0,padx=5,pady=5)
 
 
 botao = Button(janela, text="Analisar", command = imprimirAnalise)
-botao.grid(column=1, row=1, padx=0, pady=0)
+botao.grid(column=2, row=1, padx=0, pady=0)
 
 menu = Menu(janela)
 menu_arq = Menu(menu)
